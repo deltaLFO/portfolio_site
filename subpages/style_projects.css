@@ -1,121 +1,58 @@
-/* RESET */
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Consolas', 'Courier New', monospace; }
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    background-color: #111;
-    color: #00ff00; /* Hacker Green */
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    background-color: #050005;
+    color: #00ff41; /* Classic Matrix Green */
+    font-family: 'VT323', monospace;
+    line-height: 1.6;
+    padding: 20px;
 }
 
-/* RETURN BUTTON */
+/* --- QUICK MENU (Top Center) --- */
+#top-bar {
+    position: fixed; top: 0; left: 0; width: 100%; height: 50px;
+    z-index: 9999; display: flex; justify-content: center; padding: 10px;
+}
+.dropdown { position: relative; display: inline-block; }
+.dropbtn {
+    background-color: #000; color: #00ff41; padding: 10px 15px; font-size: 1.2rem; 
+    border: 2px solid #00ff41; cursor: pointer; text-transform: uppercase;
+    font-family: 'VT323', monospace;
+}
+.dropdown-content {
+    display: none; position: absolute; left: 50%; transform: translateX(-50%); top: 100%;
+    background-color: #000; min-width: 180px; border: 2px solid #00ff41; 
+    z-index: 10000; text-align: center;
+}
+.dropdown-content a {
+    color: #00ff41; padding: 12px 16px; text-decoration: none; display: block; 
+    font-size: 1rem; border-bottom: 1px solid #004400;
+}
+.dropdown-content a:hover { background-color: #004400; }
+.dropdown:hover .dropdown-content { display: block; }
+
+/* --- PAGE LAYOUT --- */
+.container {
+    max-width: 800px;
+    margin: 60px auto;
+    border: 1px solid #00ff41;
+    padding: 30px;
+    background: rgba(0, 20, 0, 0.9);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+}
+
+h1 { font-size: 2.5rem; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #00ff41; }
+h2 { color: #fff; margin-top: 20px; font-size: 1.8rem; }
+p { font-size: 1.3rem; margin-bottom: 15px; }
+
 .back-btn {
-    position: fixed; top: 20px; left: 20px;
-    background: #002200; color: #00ff00;
-    padding: 10px 20px; text-decoration: none;
-    border: 1px solid #00ff00;
-    text-shadow: 0 0 5px #00ff00;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
-    z-index: 100; font-weight: bold;
-    transition: 0.3s;
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: 1px solid #00ff41;
+    color: #00ff41;
+    text-decoration: none;
 }
-.back-btn:hover { background: #00ff00; color: black; box-shadow: 0 0 20px #00ff00; }
-
-/* MONITOR CONTAINER */
-.monitor-container {
-    width: 90%; max-width: 1000px; height: 90vh;
-    display: flex; justify-content: center; align-items: center;
-}
-
-.screen-bezel {
-    background: #222; padding: 20px; border-radius: 20px;
-    box-shadow: 
-        inset 0 0 20px black,
-        0 0 0 5px #333,
-        0 20px 50px rgba(0,0,0,0.8);
-    width: 100%; height: 100%;
-    display: flex; flex-direction: column; position: relative;
-}
-
-.brand-logo {
-    color: #555; font-weight: bold; letter-spacing: 2px;
-    text-align: right; margin-bottom: 5px; font-size: 0.8rem;
-}
-
-/* THE GLOWING SCREEN */
-.crt-screen {
-    background: #001100; /* Deep Green/Black */
-    flex: 1; border-radius: 40px / 20px; /* Slight curve */
-    border: 2px solid #333;
-    padding: 40px; overflow-y: auto;
-    box-shadow: inset 0 0 80px rgba(0,0,0,0.8);
-    position: relative;
-    
-    /* CRT TEXT GLOW */
-    text-shadow: 0 0 2px #00aa00, 0 0 5px #00ff00;
-}
-
-/* SCANLINE EFFECT */
-.scan-line {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    background-size: 100% 2px, 3px 100%;
-    pointer-events: none; z-index: 10;
-}
-
-/* CONTENT STYLES */
-.project-header {
-    border-bottom: 2px solid #00ff00;
-    padding-bottom: 20px; margin-bottom: 30px;
-    display: flex; justify-content: space-between; align-items: flex-end;
-}
-.project-header h1 { font-size: 2rem; }
-.blink { animation: blinker 1s linear infinite; }
-@keyframes blinker { 50% { opacity: 0; } }
-
-/* PROJECT GRID */
-.project-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-}
-
-.project-card {
-    border: 1px solid #004400;
-    padding: 20px; background: rgba(0, 20, 0, 0.5);
-    transition: 0.3s;
-}
-.project-card:hover {
-    background: rgba(0, 50, 0, 0.6);
-    border-color: #00ff00;
-    transform: translateY(-5px);
-}
-
-.project-card h2 { font-size: 1.2rem; margin-bottom: 15px; color: #ccffcc; }
-.project-card p { font-size: 0.9rem; color: #88ff88; line-height: 1.4; margin-bottom: 15px; text-shadow: none; }
-
-/* VISUALIZERS (Squiggly lines and bars) */
-.waveform-visual {
-    height: 60px; border: 1px solid #003300; margin-bottom: 15px;
-    display: flex; align-items: flex-end; justify-content: space-around; padding: 5px;
-    background: #000500;
-}
-
-.wave-svg { width: 100%; height: 100%; }
-
-.bar-graph { display: flex; gap: 5px; height: 100%; align-items: flex-end; width: 100%; }
-.bar { width: 100%; background: #00ff00; opacity: 0.7; }
-
-/* TECH SPECS LIST */
-.tech-specs { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; }
-.tech-specs li {
-    font-size: 0.8rem; background: #002200; padding: 2px 8px; border: 1px solid #005500;
-}
-
-/* SCROLLBAR */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: #001100; }
-::-webkit-scrollbar-thumb { background: #005500; border: 1px solid #00ff00; }
+.back-btn:hover { background: #00ff41; color: #000; }

@@ -2,71 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Engineering | Quinn Gibbons</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Lab: All Systems</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        /* --- COPYING THE MAIN THEME --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Press Start 2P', cursive; cursor: auto; outline: none; image-rendering: pixelated; }
-        
-        body {
-            height: 100vh; overflow-y: auto; /* Allow scrolling on content pages */
-            color: #eee;
-            background-color: #5c94fc;
-            background-image: 
-                linear-gradient(transparent 80%, #00a800 80%), 
-                linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.3) 50%);
-            background-size: 100% 100vh, 40px 40px; /* Stretch background */
-            background-attachment: fixed;
-        }
-
-        /* --- TOP MENU (SAME AS INDEX) --- */
-        #top-bar {
-            position: fixed; top: 0; left: 0; width: 100%; height: 50px;
-            z-index: 9999; display: flex; justify-content: center; padding: 10px 20px;
-        }
-        .dropdown { position: relative; display: inline-block; }
-        .dropbtn {
-            background-color: #000; color: #fff; padding: 10px 15px; font-size: 0.7rem; border: 2px solid #fff;
-            cursor: pointer; box-shadow: 4px 4px 0px rgba(0,0,0,0.4); text-transform: uppercase;
-        }
-        .dropdown-content {
-            display: none; position: absolute; left: 50%; transform: translateX(-50%); top: 100%;
-            background-color: #000; min-width: 180px; border: 2px solid #fff; box-shadow: 8px 8px 0px rgba(0,0,0,0.5);
-            z-index: 10000; text-align: center;
-        }
-        .dropdown-content a {
-            color: #fff; padding: 12px 16px; text-decoration: none; display: block; font-size: 0.6rem; border-bottom: 1px solid #333;
-        }
-        .dropdown-content a:hover { background-color: #333; color: #ffcc00; }
-        .dropdown:hover .dropdown-content { display: block; }
-        .dropdown:hover .dropbtn { background-color: #333; color: #ffcc00; }
-
-        /* --- CONTENT CONTAINER --- */
-        .content-box {
-            max-width: 800px; margin: 80px auto; 
-            background: rgba(0,0,0,0.85); border: 4px solid #fff; 
-            padding: 40px; box-shadow: 8px 8px 0px rgba(0,0,0,0.5);
-        }
-        
-        h1 { color: #55ffff; font-size: 1.5rem; margin-bottom: 20px; text-transform: uppercase; border-bottom: 4px solid #55ffff; padding-bottom: 10px; }
-        h2 { color: #ffff55; font-size: 1.0rem; margin-top: 30px; margin-bottom: 15px; }
-        p { line-height: 1.8; font-size: 0.8rem; margin-bottom: 15px; }
-        
-        .back-btn {
-            display: inline-block; margin-top: 20px;
-            background: #000; color: #fff; border: 4px solid #fff; padding: 15px 20px;
-            text-decoration: none; font-size: 0.8rem; box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
-        }
-        .back-btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.5); background: #333; }
-
-        /* MOBILE FIXES */
-        @media only screen and (max-width: 768px) {
-            .content-box { width: 90%; padding: 20px; margin-top: 70px; }
-            h1 { font-size: 1.0rem; }
-            p { font-size: 0.6rem; }
-        }
-    </style>
+    <link rel="stylesheet" href="style_engineering.css">
 </head>
 <body>
 
@@ -74,28 +13,133 @@
         <div class="dropdown">
             <button class="dropbtn">QUICK MENU &#9660;</button>
             <div class="dropdown-content">
-                <a href="./index.html">HOME / GAME</a>
-                <a href="./music.html" style="color: #ff55ff;">MUSIC</a>
-                <a href="#" style="color: #ffff55;">RESUME (PDF)</a>
+                <a href="./index.html">HOME</a>
+                <a href="./engineering.html">ENGINEERING</a>
+                <a href="./music.html">MUSIC</a>
+                <a href="#">RESUME</a>
             </div>
         </div>
     </nav>
 
-    <div class="content-box">
-        <h1>ENGINEERING PROJECTS</h1>
+    <a href="index.html" class="return-btn">⬅ EXIT LAB</a>
+
+    <div class="lab-scene">
         
-        <h2>VOLTAGE SOURCE CONVERTER</h2>
-        <p>Developing a 50-200 W Two-Level Voltage Source Converter with Switching Frequencies Upwards of 100 kHz. This project focuses on high-efficiency power electronics.</p>
+        <div class="monitor-bezel" id="monitor-left">
+            <div class="screen-surface">
+                <header class="screen-header" id="bench-header">>> SIGNAL PROCESSING (AND AUDIO)</header>
+                
+                <div class="screen-split">
+                    
+                    <div class="circuit-area active-puzzle" id="puzzle-signal">
+                        <div class="wire input-line"></div>
+                        <div class="component-box r1-box">R1</div>
+                        <div class="wire r1-to-inverting"></div>
+                        <div class="op-amp-symbol">
+                            <div class="terminal minus">-</div>
+                            <div class="terminal plus">+</div>
+                        </div>
+                        <div class="wire ground-connection"></div>
+                        <div class="wire feedback-vertical-left"></div>
+                        <div class="wire feedback-top-cap"></div>
+                        <div class="component-slot cap-slot" id="drop-signal" ondragover="allowDrop(event)" ondrop="dropPart(event)">
+                            <span class="blink">?</span>
+                            <div class="installed-part" id="installed-cap">C (10µF)</div>
+                        </div>
+                        <div class="wire feedback-bottom-cap"></div>
+                        <div class="wire feedback-top-r2"></div>
+                        <div class="component-box r2-box">R2</div>
+                        <div class="wire feedback-bottom-r2"></div>
+                        <div class="wire feedback-vertical-right"></div>
+                        <div class="wire feedback-to-output"></div>
+                        <div class="wire output-line"></div>
+                        <div class="circuit-label label-vin">Vin</div>
+                        <div class="circuit-label label-vout">Vout</div>
+                    </div>
 
-        <h2>ESP32 MOTION DISPLAY</h2>
-        <p>Created an animated LED matrix using an ESP32 microcontroller. The system tracks motion and displays reactive pixel art faces using C++.</p>
+                    <div class="circuit-area" id="puzzle-embedded">
+                        <div class="wire logic-in-a"></div>
+                        <div class="wire logic-in-b"></div>
+                        <div class="circuit-label label-a">IN_A</div>
+                        <div class="circuit-label label-b">IN_B</div>
+                        <div class="component-slot logic-slot" id="drop-embedded" ondragover="allowDrop(event)" ondrop="dropPart(event)">
+                            <span class="blink">MISSING<br>GATE</span>
+                            <div class="installed-part nand-graphic" id="installed-nand">
+                                <div class="nand-body"></div>
+                                <div class="nand-bubble"></div>
+                            </div>
+                        </div>
+                        <div class="wire logic-out"></div>
+                        <div class="circuit-label label-q">OUT_Q</div>
+                    </div>
 
-        <h2>CIRCUIT ANALYSIS</h2>
-        <p>Experienced with Op-Amps, Taylor Series approximations in circuit design, and Thevenin equivalent modeling.</p>
+                    <div class="circuit-area" id="puzzle-robotics">
+                        <div class="robo-arm segment-1"></div>
+                        <div class="robo-joint joint-base"></div>
+                        <div class="component-slot motor-slot" id="drop-robotics" ondragover="allowDrop(event)" ondrop="dropPart(event)">
+                            <span class="blink">[ ]</span>
+                            <div class="installed-part motor-graphic" id="installed-motor">M</div>
+                        </div>
+                        <div class="robo-arm segment-2"></div>
+                        <div class="robo-joint joint-end"></div>
+                        <div class="circuit-label label-arm">ARM_IDLE</div>
+                    </div>
 
-        <br>
-        <a href="./index.html" class="back-btn">&larr; BACK TO WORLD</a>
+                    <div class="circuit-area" id="puzzle-power">
+                        <div class="wire hv-line-1"></div>
+                        <div class="circuit-label label-hv">120V AC</div>
+                        <div class="component-slot fuse-slot" id="drop-power" ondragover="allowDrop(event)" ondrop="dropPart(event)">
+                            <span class="blink">OPEN</span>
+                            <div class="installed-part fuse-graphic" id="installed-fuse">
+                                <div class="fuse-wire"></div>
+                            </div>
+                        </div>
+                        <div class="wire hv-line-2"></div>
+                        <div class="transformer-box">LOAD</div>
+                    </div>
+
+                    <div class="screen-toolbox" id="toolbox">
+                        <h4>PARTS</h4>
+                        <div class="toolbox-item" id="part-signal" draggable="true" ondragstart="drag(event)">
+                            <div class="icon-cap"></div><span>10µF</span>
+                        </div>
+                        <div class="toolbox-item hidden" id="part-embedded" draggable="true" ondragstart="drag(event)">
+                            <div class="icon-nand">D</div><span>NAND</span>
+                        </div>
+                        <div class="toolbox-item hidden" id="part-robotics" draggable="true" ondragstart="drag(event)">
+                            <div class="icon-motor">M</div><span>SERVO</span>
+                        </div>
+                        <div class="toolbox-item hidden" id="part-power" draggable="true" ondragstart="drag(event)">
+                            <div class="icon-fuse">~</div><span>FUSE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="monitor-bezel" id="monitor-right">
+             <div class="screen-surface menu-screen">
+                 <h1>> ENGINEERING_OS v2.0</h1>
+                 <div class="menu-grid">
+                    <button class="menu-btn active" id="btn-signal" onclick="switchModule('signal')">[ ▶ SIGNAL (AUDIO) ]</button>
+                    <button class="menu-btn" id="btn-embedded" onclick="switchModule('embedded')">[ ▶ EMBEDDED ]</button>
+                    <button class="menu-btn" id="btn-robotics" onclick="switchModule('robotics')">[ ▶ ROBOTICS ]</button>
+                    <button class="menu-btn" id="btn-power" onclick="switchModule('power')">[ ▶ POWER ]</button>
+                </div>
+                <div class="terminal-window">
+                    <div class="terminal-header">:: SYSTEM_LOG.txt ::</div>
+                    <div class="terminal-content" id="terminal-text">
+                        > BOOT_SEQUENCE_INIT...<br>
+                        > MODULE DETECTED: Signal Processing.<br>
+                        > ERROR: Feedback Loop Open.<br>
+                        > INSTRUCTION: Place Capacitor to stabilize.<span class="cursor">_</span>
+                    </div>
+                </div>
+             </div>
+        </div>
     </div>
 
+    <div id="status-popup"></div>
+    <script src="script_engineering.js"></script>
 </body>
 </html>

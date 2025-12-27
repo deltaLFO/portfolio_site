@@ -5,9 +5,9 @@ body {
     height: 100vh; overflow: hidden; background-color: #050005;
 }
 
-/* RETURN BUTTON */
+/* RETURN BUTTON (Adjusted top to not overlap menu) */
 .return-btn {
-    position: fixed; top: 20px; left: 20px;
+    position: fixed; top: 60px; left: 20px;
     background: rgba(40, 0, 40, 0.9); color: #ff00ff;
     padding: 10px 20px; text-decoration: none; font-weight: bold;
     border: 2px solid #ff00ff; box-shadow: 0 0 10px #ff00ff;
@@ -245,3 +245,32 @@ body {
 .terminal-header { background: #bf00ff; color: black; font-size: 0.7rem; padding: 2px 5px; font-weight: bold; }
 .terminal-content { padding: 10px; font-size: 0.75rem; color: #ffccff; line-height: 1.5; overflow-y: auto; }
 .cursor { animation: blinker 1s infinite; font-weight: bold;}
+
+
+/* ========================================= */
+/* === QUICK MENU CSS (Added) === */
+/* ========================================= */
+#top-bar {
+    position: fixed; top: 0; left: 0; width: 100%; height: 50px;
+    z-index: 9999; display: flex; justify-content: center; padding: 10px 20px;
+}
+.dropdown { position: relative; display: inline-block; }
+.dropbtn {
+    background-color: #000; color: #fff; padding: 10px 15px; font-size: 0.7rem; 
+    border: 2px solid #fff; cursor: pointer; text-transform: uppercase;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.4);
+    font-family: 'Press Start 2P', cursive; /* 8-bit font for menu */
+}
+.dropdown-content {
+    display: none; position: absolute; left: 50%; transform: translateX(-50%); top: 100%;
+    background-color: #000; min-width: 180px; border: 2px solid #fff; 
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.5); z-index: 10000; text-align: center;
+}
+.dropdown-content a {
+    color: #fff; padding: 12px 16px; text-decoration: none; display: block; 
+    font-size: 0.6rem; border-bottom: 1px solid #333;
+    font-family: 'Press Start 2P', cursive; /* 8-bit font for menu */
+}
+.dropdown-content a:hover { background-color: #333; color: #ffcc00; }
+.dropdown:hover .dropdown-content { display: block; }
+.dropdown:hover .dropbtn { background-color: #333; color: #ffcc00; }

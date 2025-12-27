@@ -1,98 +1,103 @@
-/* --- GLOBAL --- */
-* { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.8s ease, color 0.8s ease, border 0.8s ease; }
-body { height: 100vh; overflow-y: auto; position: relative; overflow-x: hidden; }
-.layout-container { display: flex; height: 100%; }
-.content-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px 0 50px 0; }
-.stack-container { display: flex; flex-direction: column; align-items: center; gap: 30px; width: 100%; }
+/* --- GLOBAL SETTINGS --- */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* --- FIXED PLAYER --- */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Press Start 2P', cursive; outline: none; image-rendering: pixelated; }
+
+body { 
+    height: 100vh; overflow-y: auto; 
+    color: #eee;
+    background-color: #aa00aa;
+    background-image: 
+        linear-gradient(transparent 80%, #4b0082 80%), 
+        linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.1) 50%);
+    background-size: 100% 100vh, 40px 40px;
+    background-attachment: fixed;
+}
+
+/* Scanline Overlay */
+body::after {
+    content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 4px);
+    pointer-events: none; z-index: 2;
+}
+
+/* --- QUICK MENU --- */
+#top-bar {
+    position: fixed; top: 0; left: 0; width: 100%; height: 50px;
+    z-index: 9999; display: flex; justify-content: center; padding: 10px 20px;
+}
+.dropdown { position: relative; display: inline-block; }
+.dropbtn {
+    background-color: #000; color: #fff; padding: 10px 15px; font-size: 0.7rem; 
+    border: 2px solid #fff; cursor: pointer; text-transform: uppercase;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.4);
+}
+.dropdown-content {
+    display: none; position: absolute; left: 50%; transform: translateX(-50%); top: 100%;
+    background-color: #000; min-width: 180px; border: 2px solid #fff; 
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.5); z-index: 10000; text-align: center;
+}
+.dropdown-content a {
+    color: #fff; padding: 12px 16px; text-decoration: none; display: block; 
+    font-size: 0.6rem; border-bottom: 1px solid #333;
+}
+.dropdown-content a:hover { background-color: #333; color: #ffcc00; }
+.dropdown:hover .dropdown-content { display: block; }
+.dropdown:hover .dropbtn { background-color: #333; color: #ffcc00; }
+
+
+/* --- MAIN LAYOUT --- */
+.layout-container { 
+    display: flex; justify-content: center; padding-top: 80px; padding-bottom: 50px;
+}
+
+.content-box {
+    width: 90%; max-width: 600px;
+    background: rgba(0,0,0,0.85); border: 4px solid #ff55ff; /* Pink Border */
+    padding: 30px; box-shadow: 8px 8px 0px rgba(0,0,0,0.5);
+    position: relative; z-index: 5; text-align: center;
+}
+
+.page-title {
+    color: #ff55ff; font-size: 1.2rem; margin-bottom: 30px; 
+    text-transform: uppercase; border-bottom: 4px solid #ff55ff; padding-bottom: 10px;
+}
+
+/* --- MP3 PLAYER UI --- */
 .mp3-player {
-    width: 320px; height: 420px; flex-shrink: 0; 
-    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-    transition: all 0.8s ease; z-index: 10;
+    background: #220022; border: 2px solid #ff55ff;
+    padding: 20px; margin-bottom: 30px;
+    box-shadow: inset 0 0 20px rgba(255, 85, 255, 0.2);
 }
 
-/* --- TRANSITION LAYER --- */
-#transition-layer {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    pointer-events: none; z-index: 9999; overflow: hidden;
+.screen-display { 
+    background: #000; border: 2px solid #55ffff; /* Cyan Border */
+    padding: 15px; margin-bottom: 20px;
+    color: #55ffff; min-height: 80px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
 
-/* --- 1. PETAL STORM --- */
-.petal {
-    position: absolute;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-    border-radius: 100% 0 100% 0; 
-    opacity: 1; /* Solid opacity to cover screen */
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-}
-@keyframes petalfall {
-    0% { top: -20vh; transform: translateX(0) rotate(0deg); }
-    100% { top: 120vh; transform: translateX(-50px) rotate(720deg); }
-}
+#track-name { font-size: 0.8rem; margin-bottom: 10px; }
 
-/* --- 2. SOLID BUBBLE WIPE --- */
-.giant-bubble-overlay {
-    position: absolute; top: 50%; left: 50%;
-    width: 100px; height: 100px;
-    /* SOLID WHITE CENTER to block view */
-    background: radial-gradient(circle, rgba(255,255,255,1) 40%, rgba(255,255,255,0.8) 60%, rgba(135, 206, 250, 0.4) 100%);
-    border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    animation: bubblepopAnim 1.2s ease-in-out forwards;
-}
-@keyframes bubblepopAnim {
-    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-    20% { opacity: 1; }
-    50% { transform: translate(-50%, -50%) scale(30); opacity: 1; } /* FULL COVERAGE HERE */
-    80% { opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(40); opacity: 0; } /* POP */
-}
+.screen-visualizer { display: flex; gap: 5px; height: 20px; align-items: flex-end; }
+.bar { width: 10px; background: #55ffff; animation: bounce 0.5s infinite alternate; }
+.bar:nth-child(2) { animation-delay: 0.1s; height: 15px; }
+.bar:nth-child(3) { animation-delay: 0.3s; height: 10px; }
+.bar:nth-child(4) { animation-delay: 0.2s; height: 18px; }
 
-/* --- 3. FIRE WALL --- */
-.particle { position: absolute; pointer-events: none; }
-@keyframes fireburn {
-    0% { bottom: -10vh; transform: scale(0.5); opacity: 0; }
-    20% { opacity: 1; }
-    100% { bottom: 120vh; transform: scale(3) rotate(20deg); opacity: 0; }
+@keyframes bounce { from { height: 5px; } to { height: 20px; } }
+
+.controls-area { display: flex; justify-content: center; gap: 10px; }
+.control-btn {
+    background: #000; color: #fff; border: 2px solid #fff;
+    width: 40px; height: 40px; cursor: pointer;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
 }
-.char-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: #000; /* Solid Black */
-    opacity: 0; animation: charAnim 1.5s forwards;
-}
-@keyframes charAnim {
-    0% { opacity: 0; } 
-    40% { opacity: 1; } /* SOLID BLACK HERE */
-    60% { opacity: 1; } 
-    100% { opacity: 0; }
-}
+.control-btn:hover { background: #333; transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+.control-btn.play { width: 50px; border-color: #ff55ff; color: #ff55ff; }
 
-/* --- THEMES --- */
-/* Blossom */
-body.theme-blossom { background: linear-gradient(180deg, #ffdde1 0%, #ffffff 100%); color: #5d4037; font-family: 'Garamond', serif; }
-.theme-blossom .mp3-player { background: #fff0f5; border: 6px double #ff80ab; border-radius: 20px; padding: 20px; box-shadow: 0 10px 20px rgba(255, 105, 180, 0.2); }
-.theme-blossom .screen-display { width: 100%; height: 160px; background: white; border: 1px solid #ffcdbea8; color: #880e4f; padding: 20px; border-radius: 5px; text-align: center; }
-.theme-blossom .control-btn { background: white; border: 1px solid #ff80ab; color: #c51162; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; }
-.theme-blossom .info-panel { background: rgba(255, 255, 255, 0.8); border: 1px solid #ffc1e3; width: 360px; padding: 25px; text-align: center; }
-
-/* Aero */
-body.theme-aero { background: linear-gradient(180deg, #70c4ff 0%, #ffffff 60%, #e0f7fa 100%); color: #333; font-family: 'Segoe UI', sans-serif; }
-.theme-aero .mp3-player { background: linear-gradient(180deg, #ffffff 0%, #d9d9d9 100%); border: 1px solid #ccc; border-radius: 40px; padding: 25px; box-shadow: inset 0 1px 0 white, 0 20px 40px rgba(0,0,0,0.2); }
-.theme-aero .screen-display { width: 100%; height: 160px; background: linear-gradient(180deg, #2b3a42 0%, #1c2529 100%); border-radius: 15px; border: 2px solid #555; padding: 15px; color: #e0f7fa; text-align: center; }
-.theme-aero .control-btn { background: linear-gradient(180deg, #4fc3f7 0%, #01579b 100%); border: 1px solid #01457b; color: white; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; }
-.theme-aero .info-panel { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border: 1px solid white; border-radius: 15px; width: 360px; padding: 25px; text-align: center; }
-
-/* Dark */
-body.theme-dark { background-color: #1a1510; color: #d7ccc8; font-family: 'Times New Roman', serif; }
-.theme-dark .mp3-player { background: #281d18; border: 8px solid #100c0a; border-radius: 5px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-.theme-dark .screen-display { width: 100%; height: 160px; background: #000; border: 2px solid #8d6e63; color: #ffb74d; font-family: 'Courier New', monospace; padding: 20px; text-align: center; }
-.theme-dark .control-btn { background: #3e2723; border: 2px solid #8d6e63; color: #ffb74d; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; }
-.theme-dark .info-panel { background: #e0c9a6; color: #3e2723; width: 360px; padding: 30px; text-align: center; border: 1px solid #8d6e63; }
-
-.control-btn.play { width: 70px !important; height: 70px !important; }
-.return-btn { position: fixed; top: 20px; left: 20px; padding: 10px 20px; background: white; text-decoration: none; border-radius: 20px; color: black; z-index: 100; font-weight: bold; border: 2px solid #333;}
-.bg-element { position: absolute; border-radius: 50%; z-index: -1; opacity: 0.5; }
-.b1 { width: 100px; height: 100px; top: 10%; left: 10%; background: rgba(255,255,255,0.5); }
-.b2 { width: 60px; height: 60px; top: 40%; right: 20%; background: rgba(255,255,255,0.3); }
-.b3 { width: 150px; height: 150px; bottom: 10%; left: 30%; background: rgba(255,255,255,0.4); }
+/* --- SONG INFO --- */
+.info-panel { color: #ddd; }
+#song-title-header { color: #ffff55; font-size: 0.9rem; margin-bottom: 10px; }
+.panel-divider { height: 2px; background: #555; width: 50%; margin: 10px auto; }
+#song-description { font-size: 0.7rem; line-height: 1.6; }
