@@ -2,23 +2,131 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Quinn website</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Lab: All Systems</title>
+    <link rel="stylesheet" href="style_engineering.css">
 </head>
 <body>
 
-    <div class="layout-container">
-        <main class="content-area">
-            </main>
+    <a href="index.html" class="return-btn">⬅ EXIT LAB</a>
 
-        <nav class="sidebar">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="music.html">Music</a></li>
-                <li><a href="engineering.html" class="active">Engineering</a></li>
-            </ul>
-        </nav>
+    <div class="lab-scene">
+        
+        <div class="monitor-bezel" id="monitor-left">
+            <div class="screen-surface">
+                <header class="screen-header" id="bench-header">>> SIGNAL PROCESSING (AND AUDIO)</header>
+                
+                <div class="screen-split">
+                    
+                    <div class="circuit-area active-puzzle" id="puzzle-signal">
+                        <div class="wire input-line"></div>
+                        <div class="component-box r1-box">R1</div>
+                        <div class="wire r1-to-inverting"></div>
+                        <div class="op-amp-symbol">
+                            <div class="terminal minus">-</div>
+                            <div class="terminal plus">+</div>
+                        </div>
+                        <div class="wire ground-connection"></div>
+                        <div class="wire feedback-vertical-left"></div>
+                        <div class="wire feedback-top-cap"></div>
+                        <div class="component-slot cap-slot" id="drop-signal" ondragover="allowDrop(event)" ondrop="dropPart(event)">
+                            <span class="blink">?</span>
+                            <div class="installed-part" id="installed-cap">C (10µF)</div>
+                        </div>
+                        <div class="wire feedback-bottom-cap"></div>
+                        <div class="wire feedback-top-r2"></div>
+                        <div class="component-box r2-box">R2</div>
+                        <div class="wire feedback-bottom-r2"></div>
+                        <div class="wire feedback-vertical-right"></div>
+                        <div class="wire feedback-to-output"></div>
+                        <div class="wire output-line"></div>
+                        <div class="circuit-label label-vin">Vin</div>
+                        <div class="circuit-label label-vout">Vout</div>
+                    </div>
+
+                    <div class="circuit-area" id="puzzle-embedded">
+                        <div class="wire logic-in-a"></div>
+                        <div class="wire logic-in-b"></div>
+                        <div class="circuit-label label-a">IN_A</div>
+                        <div class="circuit-label label-b">IN_B</div>
+                        <div class="component-slot logic-slot" id="drop-embedded" ondragover="allowDrop(event)" ondrop="dropPart(event)">
+                            <span class="blink">MISSING<br>GATE</span>
+                            <div class="installed-part nand-graphic" id="installed-nand">
+                                <div class="nand-body"></div>
+                                <div class="nand-bubble"></div>
+                            </div>
+                        </div>
+                        <div class="wire logic-out"></div>
+                        <div class="circuit-label label-q">OUT_Q</div>
+                    </div>
+
+                    <div class="circuit-area" id="puzzle-robotics">
+                        <div class="robo-arm segment-1"></div>
+                        <div class="robo-joint joint-base"></div>
+                        <div class="component-slot motor-slot" id="drop-robotics" ondragover="allowDrop(event)" ondrop="dropPart(event)">
+                            <span class="blink">[ ]</span>
+                            <div class="installed-part motor-graphic" id="installed-motor">M</div>
+                        </div>
+                        <div class="robo-arm segment-2"></div>
+                        <div class="robo-joint joint-end"></div>
+                        <div class="circuit-label label-arm">ARM_IDLE</div>
+                    </div>
+
+                    <div class="circuit-area" id="puzzle-power">
+                        <div class="wire hv-line-1"></div>
+                        <div class="circuit-label label-hv">120V AC</div>
+                        <div class="component-slot fuse-slot" id="drop-power" ondragover="allowDrop(event)" ondrop="dropPart(event)">
+                            <span class="blink">OPEN</span>
+                            <div class="installed-part fuse-graphic" id="installed-fuse">
+                                <div class="fuse-wire"></div>
+                            </div>
+                        </div>
+                        <div class="wire hv-line-2"></div>
+                        <div class="transformer-box">LOAD</div>
+                    </div>
+
+                    <div class="screen-toolbox" id="toolbox">
+                        <h4>PARTS</h4>
+                        <div class="toolbox-item" id="part-signal" draggable="true" ondragstart="drag(event)">
+                            <div class="icon-cap"></div><span>10µF</span>
+                        </div>
+                        <div class="toolbox-item hidden" id="part-embedded" draggable="true" ondragstart="drag(event)">
+                            <div class="icon-nand">D</div><span>NAND</span>
+                        </div>
+                        <div class="toolbox-item hidden" id="part-robotics" draggable="true" ondragstart="drag(event)">
+                            <div class="icon-motor">M</div><span>SERVO</span>
+                        </div>
+                        <div class="toolbox-item hidden" id="part-power" draggable="true" ondragstart="drag(event)">
+                            <div class="icon-fuse">~</div><span>FUSE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="monitor-bezel" id="monitor-right">
+             <div class="screen-surface menu-screen">
+                 <h1>> ENGINEERING_OS v2.0</h1>
+                 <div class="menu-grid">
+                    <button class="menu-btn active" id="btn-signal" onclick="switchModule('signal')">[ ▶ SIGNAL (AUDIO) ]</button>
+                    <button class="menu-btn" id="btn-embedded" onclick="switchModule('embedded')">[ ▶ EMBEDDED ]</button>
+                    <button class="menu-btn" id="btn-robotics" onclick="switchModule('robotics')">[ ▶ ROBOTICS ]</button>
+                    <button class="menu-btn" id="btn-power" onclick="switchModule('power')">[ ▶ POWER ]</button>
+                </div>
+                <div class="terminal-window">
+                    <div class="terminal-header">:: SYSTEM_LOG.txt ::</div>
+                    <div class="terminal-content" id="terminal-text">
+                        > BOOT_SEQUENCE_INIT...<br>
+                        > MODULE DETECTED: Signal Processing.<br>
+                        > ERROR: Feedback Loop Open.<br>
+                        > INSTRUCTION: Place Capacitor to stabilize.<span class="cursor">_</span>
+                    </div>
+                </div>
+             </div>
+        </div>
     </div>
 
+    <div id="status-popup"></div>
+    <script src="script_engineering.js"></script>
 </body>
 </html>

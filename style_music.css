@@ -1,0 +1,98 @@
+/* --- GLOBAL --- */
+* { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.8s ease, color 0.8s ease, border 0.8s ease; }
+body { height: 100vh; overflow-y: auto; position: relative; overflow-x: hidden; }
+.layout-container { display: flex; height: 100%; }
+.content-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px 0 50px 0; }
+.stack-container { display: flex; flex-direction: column; align-items: center; gap: 30px; width: 100%; }
+
+/* --- FIXED PLAYER --- */
+.mp3-player {
+    width: 320px; height: 420px; flex-shrink: 0; 
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    transition: all 0.8s ease; z-index: 10;
+}
+
+/* --- TRANSITION LAYER --- */
+#transition-layer {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none; z-index: 9999; overflow: hidden;
+}
+
+/* --- 1. PETAL STORM --- */
+.petal {
+    position: absolute;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    border-radius: 100% 0 100% 0; 
+    opacity: 1; /* Solid opacity to cover screen */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+@keyframes petalfall {
+    0% { top: -20vh; transform: translateX(0) rotate(0deg); }
+    100% { top: 120vh; transform: translateX(-50px) rotate(720deg); }
+}
+
+/* --- 2. SOLID BUBBLE WIPE --- */
+.giant-bubble-overlay {
+    position: absolute; top: 50%; left: 50%;
+    width: 100px; height: 100px;
+    /* SOLID WHITE CENTER to block view */
+    background: radial-gradient(circle, rgba(255,255,255,1) 40%, rgba(255,255,255,0.8) 60%, rgba(135, 206, 250, 0.4) 100%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: bubblepopAnim 1.2s ease-in-out forwards;
+}
+@keyframes bubblepopAnim {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    20% { opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(30); opacity: 1; } /* FULL COVERAGE HERE */
+    80% { opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(40); opacity: 0; } /* POP */
+}
+
+/* --- 3. FIRE WALL --- */
+.particle { position: absolute; pointer-events: none; }
+@keyframes fireburn {
+    0% { bottom: -10vh; transform: scale(0.5); opacity: 0; }
+    20% { opacity: 1; }
+    100% { bottom: 120vh; transform: scale(3) rotate(20deg); opacity: 0; }
+}
+.char-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #000; /* Solid Black */
+    opacity: 0; animation: charAnim 1.5s forwards;
+}
+@keyframes charAnim {
+    0% { opacity: 0; } 
+    40% { opacity: 1; } /* SOLID BLACK HERE */
+    60% { opacity: 1; } 
+    100% { opacity: 0; }
+}
+
+/* --- THEMES --- */
+/* Blossom */
+body.theme-blossom { background: linear-gradient(180deg, #ffdde1 0%, #ffffff 100%); color: #5d4037; font-family: 'Garamond', serif; }
+.theme-blossom .mp3-player { background: #fff0f5; border: 6px double #ff80ab; border-radius: 20px; padding: 20px; box-shadow: 0 10px 20px rgba(255, 105, 180, 0.2); }
+.theme-blossom .screen-display { width: 100%; height: 160px; background: white; border: 1px solid #ffcdbea8; color: #880e4f; padding: 20px; border-radius: 5px; text-align: center; }
+.theme-blossom .control-btn { background: white; border: 1px solid #ff80ab; color: #c51162; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; }
+.theme-blossom .info-panel { background: rgba(255, 255, 255, 0.8); border: 1px solid #ffc1e3; width: 360px; padding: 25px; text-align: center; }
+
+/* Aero */
+body.theme-aero { background: linear-gradient(180deg, #70c4ff 0%, #ffffff 60%, #e0f7fa 100%); color: #333; font-family: 'Segoe UI', sans-serif; }
+.theme-aero .mp3-player { background: linear-gradient(180deg, #ffffff 0%, #d9d9d9 100%); border: 1px solid #ccc; border-radius: 40px; padding: 25px; box-shadow: inset 0 1px 0 white, 0 20px 40px rgba(0,0,0,0.2); }
+.theme-aero .screen-display { width: 100%; height: 160px; background: linear-gradient(180deg, #2b3a42 0%, #1c2529 100%); border-radius: 15px; border: 2px solid #555; padding: 15px; color: #e0f7fa; text-align: center; }
+.theme-aero .control-btn { background: linear-gradient(180deg, #4fc3f7 0%, #01579b 100%); border: 1px solid #01457b; color: white; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; }
+.theme-aero .info-panel { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border: 1px solid white; border-radius: 15px; width: 360px; padding: 25px; text-align: center; }
+
+/* Dark */
+body.theme-dark { background-color: #1a1510; color: #d7ccc8; font-family: 'Times New Roman', serif; }
+.theme-dark .mp3-player { background: #281d18; border: 8px solid #100c0a; border-radius: 5px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+.theme-dark .screen-display { width: 100%; height: 160px; background: #000; border: 2px solid #8d6e63; color: #ffb74d; font-family: 'Courier New', monospace; padding: 20px; text-align: center; }
+.theme-dark .control-btn { background: #3e2723; border: 2px solid #8d6e63; color: #ffb74d; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; }
+.theme-dark .info-panel { background: #e0c9a6; color: #3e2723; width: 360px; padding: 30px; text-align: center; border: 1px solid #8d6e63; }
+
+.control-btn.play { width: 70px !important; height: 70px !important; }
+.return-btn { position: fixed; top: 20px; left: 20px; padding: 10px 20px; background: white; text-decoration: none; border-radius: 20px; color: black; z-index: 100; font-weight: bold; border: 2px solid #333;}
+.bg-element { position: absolute; border-radius: 50%; z-index: -1; opacity: 0.5; }
+.b1 { width: 100px; height: 100px; top: 10%; left: 10%; background: rgba(255,255,255,0.5); }
+.b2 { width: 60px; height: 60px; top: 40%; right: 20%; background: rgba(255,255,255,0.3); }
+.b3 { width: 150px; height: 150px; bottom: 10%; left: 30%; background: rgba(255,255,255,0.4); }

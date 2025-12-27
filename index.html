@@ -3,26 +3,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quinn | Home</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Quinn Gibbons | 8-Bit World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        /* --- GLOBAL & 8-BIT BACKGROUND --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Press Start 2P', cursive; cursor: none; outline: none; image-rendering: pixelated; }
+        
+        body {
+            height: 100vh; overflow: hidden; position: relative;
+            color: #eee;
+            background-color: #5c94fc;
+            background-image: 
+                linear-gradient(transparent 80%, #00a800 80%), 
+                linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.3) 50%);
+            background-size: 100% 100%, 40px 40px;
+            transition: background 0.5s;
+        }
+
+        /* --- ALIEN MODE STYLES --- */
+        body.alien-mode {
+            background-color: #1a0033;
+            background-image: 
+                linear-gradient(transparent 80%, #4b0082 80%),
+                radial-gradient(circle, rgba(0,255,0,0.2) 2px, transparent 2px);
+            background-size: 100% 100%, 60px 60px;
+        }
+        body.alien-mode .door-zone {
+            background-color: #2a2a2a; border-color: #00ff00; box-shadow: 0 0 15px #00ff00;
+        }
+        body.alien-mode .intro-text {
+            border-color: #00ff00; color: #00ff00; box-shadow: 8px 8px 0px rgba(0,255,0,0.3);
+        }
+        body.alien-mode h1 { color: #00ff00; }
+        body.alien-mode #chat-widget { border-color: #00ff00; background-color: #000; }
+        body.alien-mode .chat-header { color: #00ff00; }
+        
+        /* Alien Button Styles */
+        body.alien-mode .chip-btn {
+            background-color: #333; border-color: #00ff00; color: #00ff00;
+        }
+        body.alien-mode .chip-btn:hover {
+            background-color: #00ff00; color: #000;
+        }
+
+        /* Scanline Overlay */
+        body::after {
+            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 4px);
+            pointer-events: none; z-index: 2;
+        }
+
+        /* --- TOP DROPDOWN MENU (CENTERED) --- */
+        #top-bar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 50px;
+            z-index: 9999; 
+            display: flex; 
+            justify-content: center; /* CENTERED HERE */
+            padding: 10px 20px;
+            pointer-events: none; 
+        }
+
+        .dropdown { position: relative; display: inline-block; pointer-events: auto; }
+
+        .dropbtn {
+            background-color: #000; color: #fff;
+            padding: 10px 15px; font-size: 0.7rem; border: 2px solid #fff;
+            cursor: pointer; box-shadow: 4px 4px 0px rgba(0,0,0,0.4);
+            text-transform: uppercase;
+        }
+
+        .dropdown-content {
+            display: none; position: absolute; 
+            left: 50%; transform: translateX(-50%); /* Center dropdown below button */
+            top: 100%;
+            background-color: #000; min-width: 180px;
+            border: 2px solid #fff; box-shadow: 8px 8px 0px rgba(0,0,0,0.5);
+            z-index: 10000;
+            text-align: center;
+        }
+
+        .dropdown-content a {
+            color: #fff; padding: 12px 16px; text-decoration: none;
+            display: block; font-size: 0.6rem; border-bottom: 1px solid #333;
+            cursor: pointer;
+        }
+        .dropdown-content a:hover { background-color: #333; color: #ffcc00; }
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown:hover .dropbtn { background-color: #333; color: #ffcc00; }
+
+        .link-eng { color: #55ffff !important; }
+        .link-music { color: #ff55ff !important; }
+        .link-resume { color: #ffff55 !important; }
+
+
+        /* --- 8-BIT DOORS --- */
+        .door-zone {
+            position: absolute; width: 120px; height: 160px;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            z-index: 5;
+            background-color: #8b4513; border: 8px solid #5e2c0b;
+            box-shadow: inset 0 0 0 4px #a0522d, 8px 8px 0px rgba(0,0,0,0.3);
+        }
+        .door-zone::after {
+            content: ''; position: absolute; top: 50%; right: 15px;
+            width: 12px; height: 12px; background: #ffd700; border: 2px solid #cfa700;
+        }
+        .door-zone:hover { transform: translateY(-4px); }
+
+        .door-label {
+            background-color: #000; color: #fff; padding: 8px 10px; font-size: 0.7rem; margin-bottom: 20px;
+            border: 4px solid #fff; box-shadow: 4px 4px 0px rgba(0,0,0,0.4);
+            white-space: nowrap; pointer-events: none; position: relative; z-index: 2;
+        }
+
+        #door-eng { top: 50px; left: 80px; background-color: #0055aa; border-color: #003377; }
+        #door-eng .door-label { color: #55ffff; border-color: #55ffff; }
+        #door-music { top: 50px; right: 80px; background-color: #aa00aa; border-color: #770077; }
+        #door-music .door-label { color: #ff55ff; border-color: #ff55ff; }
+        #door-secret { bottom: 30px; left: 50%; transform: translateX(-50%); height: 80px; width: 120px; background-color: #333; border-color: #111; }
+        #door-secret .door-label { margin-bottom: 25px; color: #aaa; border-color: #aaa;}
+
+
+        /* --- INTRO TEXT WIDGET --- */
+        .intro-text {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; pointer-events: none; z-index: 10;
+            background-color: #000; border: 4px solid #fff; box-shadow: 8px 8px 0px rgba(0,0,0,0.4);
+            padding: 20px; transition: opacity 0.5s;
+        }
+        h1 { font-size: 1.5rem; color: #ffcc00; margin-bottom: 15px; text-transform: uppercase; }
+        p { font-size: 0.8rem; color: #fff; line-height: 1.4; }
+
+
+        /* --- CHAT WIDGET (Buttons Only) --- */
+        #chat-widget {
+            position: absolute; bottom: 20px; right: 20px; width: 340px;
+            background-color: #000; border: 4px solid #fff; box-shadow: 8px 8px 0px rgba(0,0,0,0.4);
+            padding: 15px; z-index: 200; display: flex; flex-direction: column; gap: 10px;
+        }
+        .chat-header { font-size: 0.9rem; color: #ffcc00; margin-bottom: 5px; }
+        
+        .quick-options { 
+            display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+        }
+        .chip-btn {
+            flex: 1 1 40%; 
+            background-color: #0000aa; border: 2px solid #5555ff; color: #fff;
+            padding: 10px; font-size: 0.6rem; cursor: pointer; box-shadow: 4px 4px 0px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+        .chip-btn:hover {
+            background-color: #5555ff; color: #000; transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .custom-cursor { position: fixed; width: 24px; height: 24px; background-color: #ff0000; border: 2px solid #fff; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; }
+
+        /* --- CHARACTER SPRITE --- */
+        #quinn-sprite {
+            position: fixed; width: 256px; height: 256px; z-index: 100;
+            background-image: url('quinn_spritesheet.png'); 
+            background-size: 600% 400%; image-rendering: pixelated; 
+            pointer-events: none; transition: none; border: none; box-shadow: none;
+        }
+
+        .anim-wave  { background-position-y: 0%; animation: playFullRow 1s steps(6) infinite; }
+        .anim-down  { background-position-y: 33.333%; animation: playFullRow 0.8s steps(6) infinite; }
+        .anim-left  { background-position-y: 66.666%; animation: playFirstHalf 0.6s steps(3) infinite; }
+        .anim-right { background-position-y: 66.666%; animation: playSecondHalf 0.6s steps(3) infinite; }
+        .anim-up    { background-position-y: 100%; animation: playFullRow 0.8s steps(6) infinite; }
+        .anim-idle  { animation: none; background-position-x: 0%; }
+
+        @keyframes playFullRow { from { background-position-x: 0%; } to { background-position-x: -600%; } }
+        @keyframes playFirstHalf { from { background-position-x: 0%; } to { background-position-x: -300%; } }
+        @keyframes playSecondHalf { from { background-position-x: -300%; } to { background-position-x: -600%; } }
+
+        /* SPEECH BUBBLE */
+        #speech-bubble {
+            position: absolute; bottom: 85%; left: 50%; transform: translateX(-50%);
+            background-color: #fff; color: #000; padding: 15px; border: 4px solid #000;
+            font-size: 0.7rem; white-space: nowrap; display: none; z-index: 101; 
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.4);
+        }
+        #speech-bubble::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -8px; border-width: 8px; border-style: solid; border-color: #000 transparent transparent transparent; }
+        #speech-bubble.show { display: block; }
+
+    </style>
 </head>
 <body>
 
-    <div class="layout-container">
-        
-        <main class="content-area">
-            <h1 class="big-name">QUINN</h1>
-        </main>
+    <div class="custom-cursor" id="cursor"></div>
 
-        <nav class="sidebar">
-            <ul class="nav-links">
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="music.html">Music</a></li>
-                <li><a href="engineering.html">Engineering</a></li>
-            </ul>
-        </nav>
+    <nav id="top-bar">
+        <div class="dropdown">
+            <button class="dropbtn">QUICK MENU &#9660;</button>
+            <div class="dropdown-content">
+                <a href="./engineering.html" class="link-eng">ENGINEERING</a>
+                <a href="./music.html" class="link-music">MUSIC</a>
+                <a href="#" class="link-resume">RESUME (PDF)</a>
+            </div>
+        </div>
+    </nav>
 
+    <div class="door-zone" id="door-eng" onclick="handleDoorClick('eng')">
+        <div class="door-label">ENGINEERING</div>
+    </div>
+    <div class="door-zone" id="door-music" onclick="handleDoorClick('music')">
+        <div class="door-label">MUSIC</div>
+    </div>
+    <div class="door-zone" id="door-secret" onclick="handleDoorClick('secret')">
+        <div class="door-label">?</div>
     </div>
 
+    <div class="intro-text" id="intro-panel">
+        <h1 id="welcome-header">QUINN GIBBONS</h1>
+        <p id="welcome-text">WELCOME TO MY 8-BIT WORLD. CLICK A DOOR TO EXPLORE!</p>
+    </div>
+
+    <div id="chat-widget">
+        <div class="chat-header">ASK QUINN</div>
+        
+        <div class="quick-options">
+            <button class="chip-btn" onclick="processQuestion('who')">WHO ARE YOU?</button>
+            <button class="chip-btn" onclick="processQuestion('doors')">WHAT ARE DOORS?</button>
+            <button class="chip-btn" onclick="processQuestion('engineering')">ENGINEERING?</button>
+            <button class="chip-btn" onclick="processQuestion('music')">MUSIC?</button>
+        </div>
+    </div>
+
+    <div id="quinn-sprite">
+        <div id="speech-bubble"></div>
+    </div>
+
+
+    <script>
+        const sprite = document.getElementById('quinn-sprite');
+        const bubble = document.getElementById('speech-bubble');
+        const cursor = document.getElementById('cursor');
+
+        // --- ALIEN LOGIC ---
+        const isAlien = Math.random() < 0.1;
+
+        if (isAlien) {
+            console.log("👽 ALIEN MODE ACTIVATED");
+            document.body.classList.add('alien-mode');
+            
+            // Swap Sprite
+            sprite.style.backgroundImage = "url('quinn_spritesheet_alien.png')";
+            
+            // --- NOTIFICATION OF RARITY ---
+            document.getElementById('welcome-header').innerText = "⚠ ALIEN QUINN ⚠";
+            document.getElementById('welcome-text').innerHTML = "YOU FOUND THE <span style='color:#00ff00'>RARE 1/10 ALIEN VERSION</span>!<br>EXPLORE MY STRANGE PLANET.";
+            document.querySelector('.chat-header').innerText = "ASK ALIEN";
+        }
+
+        const doors = {
+            eng: { el: document.getElementById('door-eng'), url: './engineering.html' },
+            music: { el: document.getElementById('door-music'), url: './music.html' },
+            secret: { el: document.getElementById('door-secret'), url: './subpages/secret.html' }
+        };
+
+        const GRID_SIZE = 16;  
+        const SPRITE_SIZE = 256; 
+        const CENTER_OFFSET = SPRITE_SIZE / 2;
+
+        let spriteX = 50;
+        let spriteY = window.innerHeight - SPRITE_SIZE - 20;
+        if (spriteY < 0) spriteY = window.innerHeight - SPRITE_SIZE;
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        let moveAccumulator = 0;
+        const MOVE_THRESHOLD = 3; 
+
+        let hasStarted = false;
+        let isGreeting = false;
+        let aiState = 'IDLE'; 
+        let targetDoorUrl = ''; 
+        let targetX = spriteX;
+        let targetY = spriteY;
+
+        sprite.style.left = spriteX + 'px';
+        sprite.style.top = spriteY + 'px';
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        document.addEventListener('click', (e) => {
+            // Ignore clicks on UI elements
+            if (e.target.closest('.door-zone') || e.target.closest('#chat-widget') || e.target.closest('#top-bar')) return;
+
+            if (!hasStarted && !isGreeting) {
+                startGreeting();
+            } else {
+                if(aiState === 'CHATTING') {
+                    bubble.classList.remove('show');
+                    aiState = 'IDLE';
+                }
+            }
+        });
+
+        function runNPCBrain() {
+            if (hasStarted && !isGreeting && aiState !== 'GOING_TO_DOOR' && aiState !== 'CHATTING') {
+                const choice = Math.random();
+                if (choice < 0.4) {
+                    aiState = 'IDLE';
+                } else {
+                    aiState = 'WANDERING';
+                    const padding = 50;
+                    const maxX = window.innerWidth - SPRITE_SIZE - padding;
+                    const maxY = window.innerHeight - SPRITE_SIZE - padding;
+                    
+                    targetX = Math.random() * (maxX - padding) + padding;
+                    targetY = Math.random() * (maxY - padding) + padding;
+                }
+            }
+            setTimeout(runNPCBrain, Math.random() * 3000 + 2000);
+        }
+
+        function processQuestion(topic) {
+            if(!hasStarted) startGreeting();
+            aiState = 'CHATTING'; 
+            setAnimation('anim-down'); // Face camera
+            bubble.classList.add('show');
+            setAnimation('anim-wave'); 
+            
+            let response = "HMM...";
+            
+            // LOGIC FOR RESPONSES
+            if (isAlien) {
+                if(topic === 'who') response = "I AM QUINN FROM SECTOR 9.";
+                else if(topic === 'doors') response = "PORTALS TO KNOWLEDGE.";
+                else if(topic === 'engineering') response = "I BUILD SPACESHIPS (AND CIRCUITS).";
+                else if(topic === 'music') response = "I PLAY THE SOUND OF STARS.";
+                else response = "BEEP BOOP.";
+            } else {
+                if(topic === 'who') response = "I'M QUINN! ENGINEER & MUSICIAN.";
+                else if(topic === 'doors') response = "BLUE = ENGINEERING. PINK = MUSIC.";
+                else if(topic === 'engineering') response = "I LOVE ELECTRONICS & ROBOTICS!";
+                else if(topic === 'music') response = "I PRODUCE TRACKS. CHECK THE PINK DOOR!";
+                else response = "THANKS FOR VISITING!";
+            }
+
+            typewriter(response, () => {
+                setTimeout(() => { if(aiState === 'CHATTING') setAnimation('anim-down'); }, 1000);
+            });
+        }
+
+        function handleDoorClick(doorKey) {
+            if(!hasStarted) { startGreeting(); return; }
+            if(aiState === 'GOING_TO_DOOR') return;
+
+            const door = doors[doorKey];
+            const rect = door.el.getBoundingClientRect();
+            targetX = rect.left + (rect.width/2) - CENTER_OFFSET;
+            targetY = rect.top + (rect.height/2) - CENTER_OFFSET;
+            targetDoorUrl = door.url;
+            aiState = 'GOING_TO_DOOR';
+            bubble.innerText = "HEADING THERE!";
+            bubble.classList.add('show');
+            setTimeout(() => bubble.classList.remove('show'), 1000);
+        }
+
+        function startGreeting() {
+            hasStarted = true;
+            isGreeting = true;
+            document.getElementById('intro-panel').style.opacity = '0'; 
+            setAnimation('anim-wave');
+            bubble.classList.add('show');
+            
+            const msg = isAlien ? "GREETINGS HUMAN. CLICK A DOOR." : "HI! I'M QUINN. CLICK A DOOR!";
+            
+            typewriter(msg, () => {
+                setTimeout(() => { finishGreeting(); }, 2000);
+            });
+        }
+
+        function finishGreeting() {
+            bubble.classList.remove('show');
+            isGreeting = false;
+            runNPCBrain();
+            setTimeout(() => { document.getElementById('intro-panel').style.display = 'none'; }, 1000);
+            gameLoop();
+        }
+
+        function gameLoop() {
+            if (isGreeting) return;
+            if (aiState === 'CHATTING' || aiState === 'IDLE') {
+                if(aiState === 'IDLE') setAnimation('anim-idle');
+                requestAnimationFrame(gameLoop);
+                return;
+            }
+
+            let destX = targetX;
+            let destY = targetY;
+            const dx = destX - spriteX;
+            const dy = destY - spriteY;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+
+            if (dist > 5) {
+                moveAccumulator++;
+                if (moveAccumulator > MOVE_THRESHOLD) {
+                    moveAccumulator = 0; 
+                    if (Math.abs(dx) > GRID_SIZE) {
+                        spriteX += (dx > 0) ? GRID_SIZE : -GRID_SIZE;
+                        setAnimation((dx > 0) ? 'anim-right' : 'anim-left');
+                    } else if (Math.abs(dy) > GRID_SIZE) {
+                        spriteY += (dy > 0) ? GRID_SIZE : -GRID_SIZE;
+                        setAnimation((dy > 0) ? 'anim-down' : 'anim-up');
+                    } else {
+                        spriteX = destX;
+                        spriteY = destY;
+                    }
+                }
+            } else {
+                setAnimation('anim-idle');
+                if (aiState === 'GOING_TO_DOOR') {
+                    enterDoor(targetDoorUrl);
+                } else if (aiState === 'WANDERING') {
+                    aiState = 'IDLE'; 
+                }
+            }
+
+            sprite.style.left = spriteX + 'px';
+            sprite.style.top = spriteY + 'px';
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        let isEntering = false;
+        function enterDoor(url) {
+            if(isEntering) return;
+            isEntering = true;
+            aiState = 'IDLE';
+
+            sprite.style.filter = "invert(100%)";
+            document.body.style.transition = "opacity 0.8s ease-out";
+            document.body.style.background = "#000";
+            document.body.style.opacity = "0";
+
+            if (url.includes('secret')) {
+                setTimeout(() => {
+                    const pass = prompt("SYSTEM LOCKED. ENTER PASSCODE:");
+                    if(pass === "12345678") {
+                        window.location.href = url;
+                    } else {
+                        alert("ACCESS DENIED");
+                        document.body.style.opacity = "1";
+                        document.body.style.background = ""; 
+                        sprite.style.filter = "";
+                        isEntering = false;
+                        aiState = 'IDLE'; 
+                    }
+                }, 600);
+            } else {
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 800);
+            }
+        }
+
+        function setAnimation(name) {
+            if (sprite.classList.contains(name)) return;
+            sprite.classList.remove('anim-wave', 'anim-down', 'anim-left', 'anim-right', 'anim-up', 'anim-idle');
+            sprite.classList.add(name);
+        }
+
+        function typewriter(text, cb) {
+            let i = 0; bubble.innerText = "";
+            if(window.tInt) clearInterval(window.tInt);
+            window.tInt = setInterval(() => {
+                if(i < text.length) bubble.innerHTML += text.charAt(i++);
+                else { clearInterval(window.tInt); if(cb) cb(); }
+            }, 30);
+        }
+    </script>
 </body>
 </html>

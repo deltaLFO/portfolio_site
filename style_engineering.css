@@ -1,0 +1,247 @@
+/* RESET & GLOBAL FONTS */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', monospace; }
+
+body {
+    height: 100vh; overflow: hidden; background-color: #050005;
+}
+
+/* RETURN BUTTON */
+.return-btn {
+    position: fixed; top: 20px; left: 20px;
+    background: rgba(40, 0, 40, 0.9); color: #ff00ff;
+    padding: 10px 20px; text-decoration: none; font-weight: bold;
+    border: 2px solid #ff00ff; box-shadow: 0 0 10px #ff00ff;
+    border-radius: 5px; z-index: 1000; letter-spacing: 1px;
+}
+
+/* MAIN SCENE */
+.lab-scene {
+    position: relative; width: 100%; height: 100%;
+    background-image: url('background1.jpg');
+    background-size: cover; background-position: center;
+}
+
+/* --- MONITOR PHYSICAL STRUCTURE --- */
+.monitor-bezel {
+    position: absolute; background-color: #1a1a1a;
+    border: 15px solid #2a2a2a; border-bottom-width: 25px; 
+    border-radius: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+    display: flex;
+}
+.monitor-bezel::before { /* Stand Neck */
+    content: ''; position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%); width: 15%; height: 40px; 
+    background: #111; z-index: -1;
+}
+.monitor-bezel::after { /* Stand Base */
+    content: ''; position: absolute; top: calc(100% + 40px); left: 50%;
+    transform: translateX(-50%); width: 40%; height: 10px; 
+    background: #1a1a1a; border-top: 2px solid #333;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.6); z-index: -1;
+}
+
+/* --- POSITIONING --- */
+#monitor-left {
+    top: 25%; left: 28%; width: 30%; height: 40%;
+    transform: perspective(1000px) rotateY(10deg); 
+}
+#monitor-right {
+    top: 12%; left: 60%; width: 38%; height: 52%;
+    transform: perspective(1000px) rotateY(-5deg); 
+}
+
+/* --- SCREEN INTERNALS --- */
+.screen-surface {
+    width: 100%; height: 100%; background-color: #050005;
+    box-shadow: inset 0 0 50px rgba(255, 0, 255, 0.15);
+    color: #ff77ff; padding: 10px; display: flex; flex-direction: column;
+    position: relative; overflow: hidden; text-shadow: 0 0 2px #d000ff;
+}
+.screen-surface::after { /* Scanlines */
+    content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
+    background: repeating-linear-gradient(transparent 0px, transparent 2px, rgba(255, 0, 255, 0.05) 3px);
+    pointer-events: none;
+}
+
+/* --- LEFT SCREEN: PUZZLES --- */
+.screen-header {
+    border-bottom: 1px solid #bf00ff; margin-bottom: 5px; padding-bottom: 5px;
+    color: #ff00ff; font-weight: bold; font-size: 0.8rem; white-space: nowrap;
+}
+.screen-split { display: flex; flex: 1; height: 100%; border: 1px solid #bf00ff; }
+
+/* Puzzle Container */
+.circuit-area {
+    flex: 1; position: relative; background: #110011; display: none; /* Hidden by default */
+}
+.circuit-area.active-puzzle { display: block; } /* Show active */
+
+/* GLOBAL COMPONENT STYLES */
+.wire { position: absolute; background: #bf00ff; box-shadow: 0 0 5px #bf00ff; }
+.circuit-label { position: absolute; color: #ff00ff; font-weight: bold; font-size: 0.7rem;}
+.component-box {
+    position: absolute; border: 2px solid #ff00ff; background: #000;
+    display: flex; justify-content: center; align-items: center;
+    color: #ff00ff; font-size: 0.7rem; font-weight: bold;
+}
+.blink { animation: blinker 0.8s linear infinite alternate; font-weight: bold; }
+@keyframes blinker { from { opacity: 1; text-shadow: 0 0 10px red; } to { opacity: 0.4; text-shadow: none;} }
+
+/* Slot / Drop Zone Generic */
+.component-slot {
+    position: absolute; border: 2px dashed #ff0055;
+    background: rgba(255, 0, 85, 0.1);
+    color: #ff0055; text-align: center; font-size: 0.7rem;
+    display: flex; justify-content: center; align-items: center; flex-direction: column;
+}
+.installed-part {
+    display: none; width: 100%; height: 100%;
+    background: #ff00ff; color: black;
+    justify-content: center; align-items: center; font-weight: bold; font-size: 0.7rem;
+    box-shadow: 0 0 15px #ff00ff; z-index: 2;
+}
+.component-slot.completed { border: 2px solid #ff00ff; }
+.component-slot.completed .blink { display: none; }
+.component-slot.completed .installed-part { display: flex; }
+
+
+/* === PUZZLE 1: SIGNAL (Integrator) === */
+.input-line { top: 50%; left: 5%; width: 25px; height: 2px; }
+.r1-box { top: calc(50% - 10px); left: calc(5% + 25px); width: 35px; height: 20px; }
+.r1-to-inverting { top: 50%; left: calc(5% + 60px); width: 40px; height: 2px; }
+
+/* Op-Amp */
+.op-amp-symbol {
+    position: absolute; top: calc(50% - 30px); left: calc(5% + 100px);
+    width: 0; height: 0;
+    border-left: 50px solid #000; border-top: 30px solid transparent; border-bottom: 30px solid transparent;
+    filter: drop-shadow(0 0 2px #ff00ff);
+}
+.op-amp-symbol::after { /* Outline */
+    content: ''; position: absolute; left: -50px; top: -30px;
+    width: 0; height: 0;
+    border-left: 50px solid #bf00ff; border-top: 30px solid transparent; border-bottom: 30px solid transparent;
+    z-index: -1; transform: scale(1.1);
+}
+.terminal { position: absolute; color: #ff00ff; font-weight: bold; font-size: 1rem;}
+.terminal.minus { top: -22px; left: -45px; } .terminal.plus { top: 8px; left: -45px; }
+.ground-connection { top: calc(50% + 15px); left: calc(5% + 115px); width: 2px; height: 25px; }
+.ground-connection::after { content: 'GND'; position: absolute; bottom: -15px; left: -8px; color: #ff00ff; font-size: 0.6rem; }
+
+/* Feedback */
+.feedback-vertical-left { top: 20%; left: calc(5% + 100px); width: 2px; height: 30%; }
+.feedback-top-cap { top: 20%; left: calc(5% + 100px); width: 35px; height: 2px; }
+.cap-slot { top: calc(20% - 15px); left: calc(5% + 135px); width: 30px; height: 30px; font-size: 1.2rem; }
+.feedback-bottom-cap { top: 20%; left: calc(5% + 165px); width: 35px; height: 2px; }
+
+.feedback-top-r2 { top: 35%; left: calc(5% + 100px); width: 35px; height: 2px; }
+.r2-box { top: calc(35% - 10px); left: calc(5% + 135px); width: 30px; height: 20px; }
+.feedback-bottom-r2 { top: 35%; left: calc(5% + 165px); width: 35px; height: 2px; }
+.feedback-vertical-right { top: 20%; left: calc(5% + 200px); width: 2px; height: 30%; }
+.feedback-to-output { top: 35%; left: calc(5% + 200px); width: 25px; height: 2px; }
+
+/* Output (Extended) */
+.output-line { top: 50%; left: calc(5% + 150px); width: 100px; height: 2px; } /* Lengthened to 100px */
+.output-line::before { /* Junction */
+    content: ''; position: absolute; left: 75px; top: -4px; width: 8px; height: 8px; background: #bf00ff; border-radius: 50%;
+}
+.output-line::after { /* Terminal Node */
+    content: ''; position: absolute; right: -6px; top: -6px; width: 10px; height: 10px; background: #000; border: 2px solid #ff00ff; border-radius: 50%;
+}
+.label-vin { top: 50%; left: 1%; transform: translateY(-50%); }
+.label-vout { top: 50%; left: calc(5% + 265px); transform: translateY(-50%); }
+
+
+/* === PUZZLE 2: EMBEDDED (NAND Logic) === */
+.logic-in-a { top: 30%; left: 10%; width: 50px; height: 2px; }
+.logic-in-b { top: 70%; left: 10%; width: 50px; height: 2px; }
+.label-a { top: 25%; left: 2%; } .label-b { top: 65%; left: 2%; }
+
+.logic-slot { top: 20%; left: 30%; width: 60px; height: 60px; }
+.installed-part.nand-graphic { background: transparent; box-shadow: none; display: none; }
+.component-slot.completed .nand-graphic { display: flex; }
+
+.nand-body {
+    width: 40px; height: 50px; border: 2px solid #ff00ff; border-left: 2px solid #ff00ff;
+    border-radius: 0 25px 25px 0; background: #000; position: relative;
+    box-shadow: 0 0 10px #ff00ff;
+}
+.nand-bubble {
+    width: 8px; height: 8px; border: 2px solid #ff00ff; border-radius: 50%;
+    background: #000; margin-left: 2px;
+}
+
+.logic-out { top: 50%; left: calc(30% + 60px); width: 60px; height: 2px; }
+.label-q { top: 45%; right: 10%; }
+
+
+/* === PUZZLE 3: ROBOTICS (Servo Arm) === */
+.robo-arm { position: absolute; background: #bf00ff; width: 80px; height: 6px; border: 1px solid #ff00ff; }
+.segment-1 { top: 50%; left: 10%; transform: rotate(-30deg); transform-origin: left center; }
+.joint-base { position: absolute; top: 48%; left: 8%; width: 15px; height: 15px; background: #ff00ff; border-radius: 50%; }
+
+.motor-slot { top: 25%; left: 35%; width: 40px; height: 40px; border-radius: 5px; }
+.motor-graphic { background: #ff00ff; color: #000; font-size: 1.2rem; display: none; }
+.component-slot.completed .motor-graphic { display: flex; }
+
+.segment-2 { top: 30%; left: 45%; transform: rotate(10deg); width: 60px; }
+.joint-end { position: absolute; top: 32%; left: 65%; width: 10px; height: 10px; border: 2px solid #ff00ff; border-radius: 50%; }
+.label-arm { bottom: 10%; left: 30%; }
+
+
+/* === PUZZLE 4: POWER (Fuse) === */
+.hv-line-1 { top: 50%; left: 0; width: 30%; height: 4px; box-shadow: 0 0 10px #ff00ff; }
+.label-hv { top: 40%; left: 5%; color: #ff0055; text-shadow: 0 0 5px red; }
+
+.fuse-slot { top: 45%; left: 35%; width: 50px; height: 20px; }
+.fuse-graphic { background: transparent; border: 2px solid #ff00ff; box-shadow: none; display: none; padding: 2px; }
+.fuse-wire { width: 100%; height: 2px; background: #ff00ff; box-shadow: 0 0 5px #fff; }
+.component-slot.completed .fuse-graphic { display: flex; align-items: center; }
+
+.hv-line-2 { top: 50%; left: calc(35% + 50px); width: 20%; height: 4px; box-shadow: 0 0 10px #ff00ff; }
+.transformer-box {
+    position: absolute; top: 40%; right: 10%; width: 40px; height: 40px;
+    border: 2px solid #ff00ff; display: flex; justify-content: center; align-items: center;
+    font-size: 0.6rem; font-weight: bold; color: #ff00ff;
+}
+
+
+/* --- TOOLBOX --- */
+.screen-toolbox {
+    width: 90px; border-left: 1px solid #bf00ff; padding: 10px;
+    background: rgba(50, 0, 50, 0.3); display: flex; flex-direction: column; align-items: center;
+}
+.screen-toolbox h4 { border-bottom: 1px solid #ff00ff; width: 100%; text-align: center; margin-bottom: 10px; font-size: 0.7rem; }
+.toolbox-item {
+    border: 1px solid #ff00ff; padding: 5px; cursor: grab; text-align: center; width: 100%; margin-bottom: 10px;
+    color: #ffccff; font-size: 0.6rem;
+}
+.toolbox-item.hidden { display: none; }
+.toolbox-item:active { cursor: grabbing; background: #ff00ff; color: black; }
+
+/* Part Icons */
+.icon-cap { /* -||- */
+    width: 12px; height: 20px; border-left: 2px solid #ff00ff; border-right: 2px solid #ff00ff; margin: 0 auto; position: relative;
+}
+.icon-nand { font-size: 1rem; font-weight: bold; }
+.icon-motor { font-size: 1rem; font-weight: bold; }
+.icon-fuse { font-size: 1rem; font-weight: bold; }
+
+
+/* --- RIGHT SCREEN MENU --- */
+.menu-screen { display: flex; flex-direction: column; justify-content: flex-start; padding: 20px; }
+.menu-screen h1 { font-size: 1.2rem; margin-bottom: 20px; border-bottom: 2px solid #bf00ff; padding-bottom: 10px; color: #ff00ff; }
+.menu-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 20px; }
+.menu-btn {
+    background: transparent; border: 1px solid #550055; color: #aa55aa; padding: 8px; font-size: 0.8rem; text-align: left; transition: 0.3s; cursor: pointer;
+}
+.menu-btn.active { border-color: #ff00ff; color: #ff00ff; background: rgba(255, 0, 255, 0.15); box-shadow: 0 0 10px rgba(255,0,255,0.2); }
+.menu-btn:hover { border-color: #ff00ff; color: #ff00ff; }
+
+/* TERMINAL */
+.terminal-window {
+    width: 100%; flex: 1; background: rgba(0, 0, 0, 0.8); border: 1px solid #bf00ff; display: flex; flex-direction: column; overflow: hidden;
+}
+.terminal-header { background: #bf00ff; color: black; font-size: 0.7rem; padding: 2px 5px; font-weight: bold; }
+.terminal-content { padding: 10px; font-size: 0.75rem; color: #ffccff; line-height: 1.5; overflow-y: auto; }
+.cursor { animation: blinker 1s infinite; font-weight: bold;}

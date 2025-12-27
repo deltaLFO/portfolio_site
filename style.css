@@ -12,7 +12,7 @@ body {
     height: 100vh;
 }
 
-/* layout */
+/* LAYOUT */
 .layout-container {
     display: flex;
     height: 100%;
@@ -27,7 +27,7 @@ body {
 
 
 
-/* menu bar */
+/* MENU BAR */
 .sidebar {
     width: 200px;
     background-color: #111;
@@ -62,3 +62,5 @@ body {
     padding-right: 10px; 
     border-right: 3px solid white; 
 }
+
+

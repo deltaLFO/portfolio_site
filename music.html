@@ -2,23 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Quinn website</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Quinn's Collection</title>
+    <link rel="stylesheet" href="style_music.css">
 </head>
-<body>
+<body class="theme-blossom">
+    
+    <div id="transition-layer"></div>
+
+    <div class="bg-element b1"></div>
+    <div class="bg-element b2"></div>
+    <div class="bg-element b3"></div>
+
+    <a href="index.html" class="return-btn">
+        <span class="arrow">⬅</span> Home
+    </a>
 
     <div class="layout-container">
         <main class="content-area">
-            </main>
-
-        <nav class="sidebar">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="music.html" class="active">Music</a></li>
-                <li><a href="engineering.html">Engineering</a></li>
-            </ul>
-        </nav>
+            <div class="page-header">
+                <h1 id="header-title">Music & Poetry</h1>
+            </div>
+            <div class="stack-container">
+                <div class="mp3-player">
+                    <div class="screen-display">
+                        <h2 id="track-name">No Track</h2>
+                        <div class="screen-visualizer">
+                            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                        </div>
+                    </div>
+                    <div class="controls-area">
+                        <button id="prev-btn" class="control-btn prev">I◀</button>
+                        <button id="play-btn" class="control-btn play">▶</button>
+                        <button id="next-btn" class="control-btn next">▶I</button>
+                    </div>
+                    <audio id="audio-engine"></audio>
+                </div>
+                <div class="info-panel">
+                    <h3 id="song-title-header">Title</h3>
+                    <div class="panel-divider"></div> 
+                    <p id="song-description">Text...</p>
+                </div>
+            </div>
+            <script src="script.js"></script>
+        </main>
     </div>
-
 </body>
 </html>
